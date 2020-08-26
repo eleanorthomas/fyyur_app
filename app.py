@@ -13,6 +13,7 @@ import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+import sys
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -42,7 +43,7 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_talent_msg = db.Column(db.String)
-    shows = db.relationship("Show", backref="Show")
+    shows = db.relationship("Show", backref="Venue")
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -58,7 +59,7 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_venues = db.Column(db.Boolean, default=False)
     seeking_venues_msg = db.Column(db.String)
-    shows = db.relationship("Show", backref="Show")
+    shows = db.relationship("Show", backref="Artist")
 
 class Show(db.Model):
     __tablename__ = 'Show'
@@ -232,7 +233,6 @@ def create_venue_form():
 def create_venue_submission():
   error = False
   try:
-    # TODO: add constraints/validation?
     name = request.form['name']
     city = request.form['city']
     state = request.form['state']
@@ -257,15 +257,16 @@ def create_venue_submission():
     db.session.add(venue)
     db.session.commit()
   except:
+    e = str(sys.exc_info()[0]) + ': ' + str(sys.exc_info()[1])
     error = True
     db.session.rollback()
   finally:
     db.session.close()
   if error:
-    flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+    flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed. ' + e)
   else:
-    flash('Venue ' + venue.name + ' was successfully listed!')
-    return render_template('/venues/' + venue.id)
+    flash('Venue ' + request.form['name']+ ' was successfully listed!')
+  return render_template('pages/home.html')
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
@@ -452,7 +453,6 @@ def create_artist_form():
 def create_artist_submission():
   error = False
   try:
-    # TODO: add constraints/validation?
     name = request.form['name']
     city = request.form['city']
     state = request.form['state']
@@ -467,23 +467,25 @@ def create_artist_submission():
       city=city,
       state=state,
       phone=phone,
-      genres=genres,
+      genres="",
       url=url,
       image_link=image_link,
       facebook_link=facebook_link
     )
+
     db.session.add(artist)
     db.session.commit()
   except:
+    e = str(sys.exc_info()[0]) + ': ' + str(sys.exc_info()[1])
     error = True
     db.session.rollback()
   finally:
     db.session.close()
   if error:
-    flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
+    flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed. ' + e)
   else:
-    flash('Artist ' + artist.name + ' was successfully listed!')
-    return render_template('/artists/' + artist.id)
+    flash('Artist ' + request.form['name'] + ' was successfully listed!')
+  return render_template('pages/home.html')
 
 #  Shows
 #  ----------------------------------------------------------------
