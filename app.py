@@ -425,7 +425,7 @@ def create_artist_submission():
       city=city,
       state=state,
       phone=phone,
-      genres="",
+      genres=genres,
       website=website,
       image_link=image_link,
       facebook_link=facebook_link,
