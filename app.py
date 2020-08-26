@@ -42,6 +42,7 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_talent_msg = db.Column(db.String)
+    shows = db.relationship("Show", backref="Show")
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -57,8 +58,16 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_venues = db.Column(db.Boolean)
     seeking_venues_msg = db.Column(db.String)
+    shows = db.relationship("Show", backref="Show")
 
-# TODO Implement Show model, and complete all model relationships and properties, as a database migration.
+class Show(db.Model):
+    __tablename__ = 'Show'
+
+    id = db.Column(db.Integer, primary_key=True)
+    image_link = db.Column(db.String(500))
+    datetime = db.Column(db.DateTime)
+    artist_id = db.Column(db.Integer, db.ForeignKey("Artist.id"))
+    venue_id = db.Column(db.Integer, db.ForeignKey("Venue.id"))
 
 #----------------------------------------------------------------------------#
 # Filters.
