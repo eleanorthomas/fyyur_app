@@ -113,7 +113,7 @@ def venues():
       venue_dict['name'] = venue.name
       venue_dict['num_upcoming_shows'] = 0
 
-      shows = Show.query.filter_by(venue_id=venue_id).all()
+      shows = Show.query.filter_by(venue_id=venue.id).all()
       for show in shows:
         if show.start_time >= datetime.today():
           venue_dict['num_upcoming_shows'] += 1
@@ -334,7 +334,8 @@ def edit_artist(artist_id):
   artist['seeking_venue'] = artist_obj.seeking_venue
   artist['seeking_description'] = artist_obj.seeking_description
   artist['image_link'] = artist_obj.image_link
-  
+
+  # TODO: populate form with values from artist with ID <artist_id>
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
@@ -347,20 +348,23 @@ def edit_artist_submission(artist_id):
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
   form = VenueForm()
-  venue={
-    "id": 1,
-    "name": "The Musical Hop",
-    "genres": ["Jazz", "Reggae", "Swing", "Classical", "Folk"],
-    "address": "1015 Folsom Street",
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "123-123-1234",
-    "website": "https://www.themusicalhop.com",
-    "facebook_link": "https://www.facebook.com/TheMusicalHop",
-    "seeking_talent": True,
-    "seeking_description": "We are on the lookout for a local artist to play every two weeks. Please call us.",
-    "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
-  }
+
+  venue_obj = Venue.query.get(venue_id)
+
+  venue = dict()
+  venue['id'] = venue_obj.id
+  venue['name'] = venue_obj.name
+  venue['genres'] = venue_obj.genres.split(', ')
+  venue['address'] = venue_obj.address
+  venue['city'] = venue_obj.city
+  venue['state'] = venue_obj.state
+  venue['phone'] = venue_obj.phone
+  venue['website'] = venue_obj.website
+  venue['facebook_link'] = venue_obj.facebook_link
+  venue['seeking_talent'] = venue_obj.seeking_talent
+  venue['seeking_description'] = venue_obj.seeking_description
+  venue['image_link'] = venue_obj.image_link
+
   # TODO: populate form with values from venue with ID <venue_id>
   return render_template('forms/edit_venue.html', form=form, venue=venue)
 
@@ -426,44 +430,25 @@ def create_artist_submission():
 @app.route('/shows')
 def shows():
   # displays list of shows at /shows
-  # TODO: replace with real venues data.
-  #       num_shows should be aggregated based on number of upcoming shows per venue.
-  data=[{
-    "venue_id": 1,
-    "venue_name": "The Musical Hop",
-    "artist_id": 4,
-    "artist_name": "Guns N Petals",
-    "artist_image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
-    "start_time": "2019-05-21T21:30:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 5,
-    "artist_name": "Matt Quevedo",
-    "artist_image_link": "https://images.unsplash.com/photo-1495223153807-b916f75de8c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80",
-    "start_time": "2019-06-15T23:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-01T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-08T20:00:00.000Z"
-  }, {
-    "venue_id": 3,
-    "venue_name": "Park Square Live Music & Coffee",
-    "artist_id": 6,
-    "artist_name": "The Wild Sax Band",
-    "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
-    "start_time": "2035-04-15T20:00:00.000Z"
-  }]
+  data = []
+  shows = Show.query.order_by('start_time').all()
+  for show in shows:
+    show_dict = dict()
+    show_dict['venue_id'] = show.venue_id
+
+    venue = Venue.query.get(show.venue_id)
+    show_dict['venue_name'] = venue.name
+
+    show_dict['artist_id'] = show.artist_id
+
+    artist = Artist.query.get(show.artist_id)
+    show_dict['artist_name'] = artist.name
+    show_dict['artist_image_link'] = artist.image_link
+
+    show_dict['start_time'] = str(show.start_time)
+
+    data.append(show_dict)
+
   return render_template('pages/shows.html', shows=data)
 
 @app.route('/shows/create')
@@ -476,7 +461,6 @@ def create_shows():
 def create_show_submission():
   error = False
   try:
-    # TODO: add constraints/validation?
     artist_id = request.form['artist_id']
     venue_id = request.form['venue_id']
     start_time = request.form['start_time']
