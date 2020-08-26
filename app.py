@@ -14,6 +14,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
 import sys
+
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -42,7 +43,7 @@ class Venue(db.Model):
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean, default=False)
-    seeking_talent_msg = db.Column(db.String)
+    seeking_description = db.Column(db.String)
     shows = db.relationship("Show", backref="Venue")
 
 class Artist(db.Model):
@@ -57,8 +58,8 @@ class Artist(db.Model):
     image_link = db.Column(db.String(500))
     url = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
-    seeking_venues = db.Column(db.Boolean, default=False)
-    seeking_venues_msg = db.Column(db.String)
+    seeking_venue = db.Column(db.Boolean, default=False)
+    seeking_description = db.Column(db.String)
     shows = db.relationship("Show", backref="Artist")
 
 class Show(db.Model):
@@ -232,7 +233,6 @@ def create_venue_form():
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
   error = False
-  # TODO: add seeking fields
   try:
     name = request.form['name']
     city = request.form['city']
@@ -243,6 +243,8 @@ def create_venue_submission():
     url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
+    seeking_talent = 'seeking_talent' in request.form.items()
+    seeking_description = request.form['seeking_description']
 
     venue = Venue(
       name=name,
@@ -253,7 +255,9 @@ def create_venue_submission():
       genres=genres,
       url=url,
       image_link=image_link,
-      facebook_link=facebook_link
+      facebook_link=facebook_link,
+      seeking_talent=seeking_talent,
+      seeking_description=seeking_description
     )
     db.session.add(venue)
     db.session.commit()
@@ -453,7 +457,6 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
   error = False
-  # TODO: add seeking fields
   try:
     name = request.form['name']
     city = request.form['city']
@@ -463,6 +466,8 @@ def create_artist_submission():
     url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
+    seeking_venue = 'seeking_venue' in request.form.items()
+    seeking_description = request.form['seeking_description']
 
     artist = Artist(
       name=name,
@@ -472,7 +477,9 @@ def create_artist_submission():
       genres="",
       url=url,
       image_link=image_link,
-      facebook_link=facebook_link
+      facebook_link=facebook_link,
+      seeking_venue=seeking_venue,
+      seeking_description=seeking_description
     )
 
     db.session.add(artist)
