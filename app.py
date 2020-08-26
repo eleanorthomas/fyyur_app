@@ -235,16 +235,20 @@ def create_venue_submission():
     # TODO: add constraints/validation?
     name = request.form['name']
     city = request.form['city']
+    state = request.form['state']
     address = request.form['address']
     phone = request.form['phone']
     genres = request.form['genres']
-    url = request.form['url']
+    # TODO: add this to form
+    url = ""
+    # url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
 
     venue = Venue(
       name=name,
       city=city,
+      state=state,
       address=address,
       phone=phone,
       genres=genres,
@@ -456,7 +460,9 @@ def create_artist_submission():
     state = request.form['state']
     phone = request.form['phone']
     genres = request.form['genres']
-    url = request.form['url']
+    # TODO: add this to form
+    url = ""
+    # url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
 
