@@ -239,9 +239,7 @@ def create_venue_submission():
     address = request.form['address']
     phone = request.form['phone']
     genres = request.form['genres']
-    # TODO: add this to form
-    url = ""
-    # url = request.form['url']
+    url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
 
@@ -460,9 +458,7 @@ def create_artist_submission():
     state = request.form['state']
     phone = request.form['phone']
     genres = request.form['genres']
-    # TODO: add this to form
-    url = ""
-    # url = request.form['url']
+    url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
 
