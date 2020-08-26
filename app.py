@@ -232,13 +232,14 @@ def create_venue_form():
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
   error = False
+  # TODO: add seeking fields
   try:
     name = request.form['name']
     city = request.form['city']
     state = request.form['state']
     address = request.form['address']
     phone = request.form['phone']
-    genres = request.form['genres']
+    genres = ', '.join(request.form.getlist('genres'))
     url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
@@ -452,12 +453,13 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
   error = False
+  # TODO: add seeking fields
   try:
     name = request.form['name']
     city = request.form['city']
     state = request.form['state']
     phone = request.form['phone']
-    genres = request.form['genres']
+    genres = ', '.join(request.form.getlist('genres'))
     url = request.form['url']
     image_link = request.form['image_link']
     facebook_link = request.form['facebook_link']
