@@ -111,8 +111,12 @@ def venues():
       venue_dict = dict()
       venue_dict['id'] = venue.id
       venue_dict['name'] = venue.name
-      # TODO: should be aggregated based on number of upcoming shows per venue.
       venue_dict['num_upcoming_shows'] = 0
+
+      shows = Show.query.filter_by(venue_id=venue_id).all()
+      for show in shows:
+        if show.start_time >= datetime.today():
+          venue_dict['num_upcoming_shows'] += 1
 
       venues_list.append(venue_dict)
 
@@ -140,7 +144,6 @@ def search_venues():
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
   # shows the venue page with the given venue_id
-
   venue = Venue.query.get(venue_id)
 
   data = dict()
@@ -316,20 +319,22 @@ def show_artist(artist_id):
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
   form = ArtistForm()
-  artist={
-    "id": 4,
-    "name": "Guns N Petals",
-    "genres": ["Rock n Roll"],
-    "city": "San Francisco",
-    "state": "CA",
-    "phone": "326-123-5000",
-    "website": "https://www.gunsnpetalsband.com",
-    "facebook_link": "https://www.facebook.com/GunsNPetals",
-    "seeking_venue": True,
-    "seeking_description": "Looking for shows to perform at in the San Francisco Bay Area!",
-    "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
-  }
-  # TODO: populate form with fields from artist with ID <artist_id>
+
+  artist_obj = Artist.query.get(artist_id)
+
+  artist = dict()
+  artist['id'] = artist_obj.id
+  artist['name'] = artist_obj.name
+  artist['genres'] = artist_obj.genres.split(', ')
+  artist['city'] = artist_obj.city
+  artist['state'] = artist_obj.state
+  artist['phone'] = artist_obj.phone
+  artist['website'] = artist_obj.website
+  artist['facebook_link'] = artist_obj.facebook_link
+  artist['seeking_venue'] = artist_obj.seeking_venue
+  artist['seeking_description'] = artist_obj.seeking_description
+  artist['image_link'] = artist_obj.image_link
+  
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
