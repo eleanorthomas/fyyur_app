@@ -6,7 +6,7 @@
       <h3 class="form-heading">Edit artist <em>{{ artist.name }}</em></h3>
       <div class="form-group">
         <label for="name">Name</label>
-        {{ form.name(class_ = 'form-control', autofocus = true) }}
+        {{ form.name(class_ = 'form-control', autofocus = true, value = artist.name) }}
       </div>
       <div class="form-group">
           <label>City & State</label>
@@ -15,6 +15,7 @@
               {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true, value = artist.city) }}
             </div>
             <div class="form-group">
+              <!-- TODO: fix this, how to prepopulate Dropdown? -->
               {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true, value = artist.state) }}
             </div>
           </div>
@@ -26,27 +27,29 @@
       <div class="form-group">
         <label for="genres">Genres</label>
         <small>Ctrl+Click to select multiple</small>
+        <!-- TODO: fix this, how to prepopulate MultiSelect? -->
         {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true, value = artist.genres) }}
       </div>
       <div class="form-group">
           <label for="image_link">Image Link</label>
-          {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true, value = artist.image_link) }}
       </div>
       <div class="form-group">
           <label for="website">URL</label>
-          {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true, value = artist.website) }}
       </div>
       <div class="form-group">
           <label for="facebook_link">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true, value = artist.facebook_link) }}
       </div>
       <div class="form-group">
           <label for="seeking_venue">Seeking Venues?</label>
-          {{ form.seeking_venue(class_ = 'form-control', autofocus = true) }}
+          <!-- TODO: fix this, how to prepopulate checkbox? -->
+          {{ form.seeking_venue(class_ = 'form-control', autofocus = true, checked = artist.seeking_venue) }}
       </div>
       <div class="form-group">
           <label for="seeking_description">Message for Venues</label>
-          {{ form.seeking_description(class_ = 'form-control', placeholder='Looking for shows to perform at!', autofocus = true) }}
+          {{ form.seeking_description(class_ = 'form-control', placeholder='Looking for shows to perform at!', autofocus = true, value = artist.seeking_description) }}
       </div>
       <input type="submit" value="Edit Artist" class="btn btn-primary btn-lg btn-block">
     </form>
