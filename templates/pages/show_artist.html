@@ -8,6 +8,8 @@
 		</h1>
 		<p class="subtitle">
 			ID: {{ artist.id }}
+			<button class="edit-button" onclick="location.href='/artists/{{ artist.id }}/edit'">Edit Artist</button>
+			<button class="delete-button" onclick="fetch('/artists/{{ artist.id }}', {method: 'DELETE'}); location.href='/artists'">Delete Artist</button>
 		</p>
 		<div class="genres">
 			{% for genre in artist.genres %}

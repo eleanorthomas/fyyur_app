@@ -317,23 +317,17 @@ def edit_venue_submission(venue_id):
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
   # Take a venue_id and delete that venue
-  error = False
   try:
     venue = Venue.query.get(venue_id)
     venue_name = venue.name
     db.session.delete(venue)
     db.session.commit()
   except:
-    e = str(sys.exc_info()[0]) + ': ' + str(sys.exc_info()[1])
-    error = True
     db.session.rollback()
   finally:
     db.session.close()
-  if error:
-    flash('An error occurred. Venue ' + venue_name + ' could not be deleted. ' + e)
-  else:
-    flash('Venue ' + venue_name + ' was successfully deleted!')
-  return render_template('pages/home.html')
+
+  return None
 
 #  Artists
 #  ----------------------------------------------------------------
@@ -499,7 +493,6 @@ def edit_artist(artist_id):
 def edit_artist_submission(artist_id):
   # take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
-  error = False
   try:
     artist = Artist.query.get(artist_id)
 
@@ -516,24 +509,18 @@ def edit_artist_submission(artist_id):
 
     db.session.commit()
   except:
-    e = str(sys.exc_info()[0]) + ': ' + str(sys.exc_info()[1])
-    error = True
     db.session.rollback()
   finally:
     db.session.close()
-  if error:
-    flash('An error occurred. Artist ' + request.form['name'] + ' could not be updated. ' + e)
-  else:
-    flash('Artist ' + request.form['name']+ ' was successfully updated!')
 
-  return redirect(url_for('show_artist', artist_id=artist_id))
+  return None
 
 #  Delete Artist
 #  ----------------------------------------------------------------
 
 @app.route('/artists/<artist_id>', methods=['DELETE'])
 def delete_artist(artist_id):
-  # Take a artist_id and delete that venue
+  # Take an artist_id and delete that venue
   error = False
   try:
     artist = Artist.query.get(artist_id)

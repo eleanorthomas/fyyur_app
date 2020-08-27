@@ -8,6 +8,8 @@
 		</h1>
 		<p class="subtitle">
 			ID: {{ venue.id }}
+			<button class="edit-button" onclick="location.href='/venues/{{ venue.id }}/edit'">Edit Venue</button>
+			<button class="delete-button" onclick="fetch('/venues/{{ venue.id }}', {method: 'DELETE'}); location.href='/venues'">Delete Venue</button>
 		</p>
 		<div class="genres">
 			{% for genre in venue.genres %}
