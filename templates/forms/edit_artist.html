@@ -15,8 +15,7 @@
               {{ form.city(class_ = 'form-control', placeholder='City', autofocus = true, value = artist.city) }}
             </div>
             <div class="form-group">
-              <!-- TODO: fix this, how to prepopulate Dropdown? -->
-              {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true, value = artist.state) }}
+              {{ form.state(class_ = 'form-control', placeholder='State', autofocus = true) }}
             </div>
           </div>
       </div>
@@ -27,7 +26,6 @@
       <div class="form-group">
         <label for="genres">Genres</label>
         <small>Ctrl+Click to select multiple</small>
-        <!-- TODO: fix this, how to prepopulate MultiSelect? -->
         {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', autofocus = true, value = artist.genres) }}
       </div>
       <div class="form-group">
