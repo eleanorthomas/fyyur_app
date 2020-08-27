@@ -376,12 +376,11 @@ def edit_artist_submission(artist_id):
     artist.name = request.form['name']
     artist.city = request.form['city']
     artist.state = request.form['state']
-    artist.address = request.form['address']
     artist.phone = request.form['phone']
     artist.genres = ', '.join(request.form.getlist('genres'))
-    artist.website = request.form['website']
-    artist.image_link = request.form['image_link']
-    artist.facebook_link = request.form['facebook_link']
+    artist.website = '' if request.form['website'] is 'None' else request.form['website']
+    artist.image_link = '' if request.form['image_link'] is 'None' else request.form['image_link']
+    artist.facebook_link = '' if request.form['facebook_link'] is 'None' else request.form['facebook_link']
     artist.seeking_venue_= 'seeking_venue' in [field for (field, _) in request.form.items()]
     artist.seeking_description = request.form['seeking_description']
 
@@ -440,9 +439,9 @@ def edit_venue_submission(venue_id):
     venue.address = request.form['address']
     venue.phone = request.form['phone']
     venue.genres = ', '.join(request.form.getlist('genres'))
-    venue.website = request.form['website']
-    venue.image_link = request.form['image_link']
-    venue.facebook_link = request.form['facebook_link']
+    venue.website = '' if request.form['website'] is 'None' else request.form['website']
+    venue.image_link = '' if request.form['image_link'] is 'None' else request.form['image_link']
+    venue.facebook_link = '' if request.form['facebook_link'] is 'None' else request.form['facebook_link']
     venue.seeking_talent = 'seeking_talent' in [field for (field, _) in request.form.items()]
     venue.seeking_description = request.form['seeking_description']
 
